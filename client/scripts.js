@@ -15,7 +15,6 @@ function loadPage(page) {
                 });
                 content += '</ul>';
             }
-            // Vous pouvez ajouter des conditions similaires pour les autres sections comme Produits, TVA, etc.
 
             // Afficher le formulaire si on clique sur "Ajouter un client"
             if (page === 'clients') {
@@ -57,7 +56,7 @@ document.getElementById('addClientBtn').addEventListener('click', function() {
     .then(data => {
         console.log('Client ajouté avec succès:', data);
         // Réinitialiser le formulaire
-        document.getElementById('clientForm').reset();
+        document.getElementById('clientFormData').reset();
         // Vous pouvez afficher un message ou mettre à jour la liste des clients
         loadPage('clients');
     })
