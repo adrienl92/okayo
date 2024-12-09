@@ -41,43 +41,43 @@ function generateForm(page) {
         formHtml += `
             <div class="form-group">
                 <label for="nom">Nom</label>
-                <input type="text" class="form-control" id="nom" required>
+                <input type="text" class="form-control" id="nom" name="nom" required>
             </div>
             <div class="form-group">
                 <label for="adresse">Adresse</label>
-                <textarea class="form-control" id="adresse"></textarea>
+                <textarea class="form-control" id="adresse" name="adresse"></textarea>
             </div>
             <div class="form-group">
                 <label for="ville">Ville</label>
-                <input type="text" class="form-control" id="ville">
+                <input type="text" class="form-control" id="ville" name="ville">
             </div>
             <div class="form-group">
                 <label for="code_postal">Code Postal</label>
-                <input type="text" class="form-control" id="code_postal">
+                <input type="text" class="form-control" id="code_postal" name="code">
             </div>
             <div class="form-group">
                 <label for="pays">Pays</label>
-                <input type="text" class="form-control" id="pays">
+                <input type="text" class="form-control" id="pays" name="pays">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control" id="email" name="email">
             </div>
             <div class="form-group">
                 <label for="telephone">Téléphone</label>
-                <input type="text" class="form-control" id="telephone">
+                <input type="text" class="form-control" id="telephone" name="telephone">
             </div>
             <div class="form-group">
                 <label for="date_debut_client">Date Début Client</label>
-                <input type="date" class="form-control" id="date_debut_client">
+                <input type="date" class="form-control" id="date_debut_client" name="dd">
             </div>
             <div class="form-group">
                 <label for="date_fin_client">Date Fin Client</label>
-                <input type="date" class="form-control" id="date_fin_client">
+                <input type="date" class="form-control" id="date_fin_client" name="df">
             </div>
             <div class="form-group">
                 <label for="type_client">Type Client</label>
-                <input type="text" class="form-control" id="type_client">
+                <input type="text" class="form-control" id="type_client" name="type">
             </div>
             <button type="submit" class="btn btn-success">Sauvegarder</button>
             <button type="button" class="btn btn-secondary" onclick="hideForm('${page}')">Annuler</button>
