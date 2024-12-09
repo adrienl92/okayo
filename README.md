@@ -1,4 +1,5 @@
 Prérequis
+
 Télécharger le dossier contenant le projet.
 Installer les modules nécessaires :
 Exécutez la commande suivante pour installer Flask et Flask-CORS :
