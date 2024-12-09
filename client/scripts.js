@@ -4,37 +4,16 @@ function loadPage(page) {
     contentDiv.innerHTML = ''; // Effacer le contenu précédent
 
     // Générer le formulaire et la table en fonction de la page demandée
-    switch (page) {
-        case 'clients':
-            contentDiv.innerHTML = generateForm('clients') + generateTable('clients');
-            break;
-        case 'produits':
-            contentDiv.innerHTML = generateForm('produits') + generateTable('produits');
-            break;
-        case 'tvas':
-            contentDiv.innerHTML = generateForm('tvas') + generateTable('tvas');
-            break;
-        case 'tarifications':
-            contentDiv.innerHTML = generateForm('tarifications') + generateTable('tarifications');
-            break;
-        case 'factures':
-            contentDiv.innerHTML = generateForm('factures') + generateTable('factures');
-            break;
-        case 'lignes_facture':
-            contentDiv.innerHTML = generateForm('lignes_facture') + generateTable('lignes_facture');
-            break;
-        default:
-            console.log('Page non reconnue');
-    }
-
-    loadData(page);
+    contentDiv.innerHTML = generateForm(page) + generateTable(page);
+    
+    loadData(page);  // Charger les données de la page via l'API
 }
 
 // Fonction pour générer un formulaire pour une page donnée
 function generateForm(page) {
     let formHtml = `<h2>${capitalizeFirstLetter(page)}</h2>`;
     formHtml += `<button class="btn btn-primary mb-3" onclick="showForm('${page}')">Ajouter un ${capitalizeFirstLetter(page)}</button>`;
-    formHtml += `<form id="${page}Form" class="form-container">`;
+    formHtml += `<form id="${page}Form" class="form-container" style="display:none;">`;
 
     // Formulaire pour "clients"
     if (page === 'clients') {
@@ -79,12 +58,93 @@ function generateForm(page) {
                 <label for="type_client">Type Client</label>
                 <input type="text" class="form-control" id="type_client">
             </div>
-            <button type="submit" class="btn btn-success">Sauvegarder</button>
-            <button type="button" class="btn btn-secondary" onclick="hideForm('${page}')">Annuler</button>
         `;
     }
 
-    formHtml += '</form>';
+    // Formulaire pour "produits"
+    if (page === 'produits') {
+        formHtml += `
+            <div class="form-group">
+                <label for="nom_produit">Nom Produit</label>
+                <input type="text" class="form-control" id="nom_produit" required>
+            </div>
+            <div class="form-group">
+                <label for="categorie_produit">Catégorie Produit</label>
+                <input type="text" class="form-control" id="categorie_produit">
+            </div>
+            <div class="form-group">
+                <label for="date_debut">Date Début</label>
+                <input type="date" class="form-control" id="date_debut">
+            </div>
+            <div class="form-group">
+                <label for="date_fin">Date Fin</label>
+                <input type="date" class="form-control" id="date_fin">
+            </div>
+        `;
+    }
+
+    // Formulaire pour "tvas"
+    if (page === 'tvas') {
+        formHtml += `
+            <div class="form-group">
+                <label for="taux_tva">Taux TVA</label>
+                <input type="number" step="0.01" class="form-control" id="taux_tva">
+            </div>
+            <div class="form-group">
+                <label for="date_debut_tva">Date Début TVA</label>
+                <input type="date" class="form-control" id="date_debut_tva">
+            </div>
+            <div class="form-group">
+                <label for="date_fin_tva">Date Fin TVA</label>
+                <input type="date" class="form-control" id="date_fin_tva">
+            </div>
+            <div class="form-group">
+                <label for="type_tva">Type TVA</label>
+                <input type="text" class="form-control" id="type_tva">
+            </div>
+        `;
+    }
+
+    // Formulaire pour "tarifications"
+    if (page === 'tarifications') {
+        formHtml += `
+            <div class="form-group">
+                <label for="id_produit">ID Produit</label>
+                <input type="number" class="form-control" id="id_produit" required>
+            </div>
+            <div class="form-group">
+                <label for="type_tarif">Type Tarif</label>
+                <input type="text" class="form-control" id="type_tarif">
+            </div>
+            <div class="form-group">
+                <label for="prix_ht">Prix HT</label>
+                <input type="number" step="0.01" class="form-control" id="prix_ht" required>
+            </div>
+            <div class="form-group">
+                <label for="tva">TVA</label>
+                <input type="number" class="form-control" id="tva" required>
+            </div>
+            <div class="form-group">
+                <label for="date_debut">Date Début</label>
+                <input type="date" class="form-control" id="date_debut">
+            </div>
+            <div class="form-group">
+                <label for="date_fin">Date Fin</label>
+                <input type="date" class="form-control" id="date_fin">
+            </div>
+            <div class="form-group">
+                <label for="remise">Remise</label>
+                <input type="number" step="0.01" class="form-control" id="remise">
+            </div>
+        `;
+    }
+
+    // Ajouter des formulaires pour "factures" et "lignes_facture" ici
+
+    formHtml += `
+        <button type="submit" class="btn btn-success">Sauvegarder</button>
+        <button type="button" class="btn btn-secondary" onclick="hideForm('${page}')">Annuler</button>
+    </form>`;
     return formHtml;
 }
 
@@ -94,6 +154,8 @@ function generateTable(page) {
         <thead>
             <tr>
     `;
+
+    // Colonnes pour "clients"
     if (page === 'clients') {
         tableHtml += `
             <th>ID</th>
@@ -109,6 +171,44 @@ function generateTable(page) {
             <th>Type Client</th>
         `;
     }
+
+    // Colonnes pour "produits"
+    if (page === 'produits') {
+        tableHtml += `
+            <th>ID</th>
+            <th>Nom Produit</th>
+            <th>Catégorie Produit</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+        `;
+    }
+
+    // Colonnes pour "tvas"
+    if (page === 'tvas') {
+        tableHtml += `
+            <th>ID</th>
+            <th>Taux TVA</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Type TVA</th>
+        `;
+    }
+
+    // Colonnes pour "tarifications"
+    if (page === 'tarifications') {
+        tableHtml += `
+            <th>ID</th>
+            <th>ID Produit</th>
+            <th>Type Tarif</th>
+            <th>Prix HT</th>
+            <th>TVA</th>
+            <th>Prix TTC</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Remise</th>
+        `;
+    }
+
     tableHtml += `
             </tr>
         </thead>
@@ -121,25 +221,17 @@ function generateTable(page) {
 
 // Fonction pour afficher le formulaire
 function showForm(page) {
-    console.log(`Affichage du formulaire pour ${page}`);
     const formElement = document.getElementById(`${page}Form`);
     if (formElement) {
-        console.log(`Formulaire trouvé :`, formElement);
         formElement.classList.add('show');
-    } else {
-        console.error(`Formulaire non trouvé pour ${page}`);
     }
 }
 
 // Fonction pour cacher le formulaire
 function hideForm(page) {
-    console.log(`Masquage du formulaire pour ${page}`);
     const formElement = document.getElementById(`${page}Form`);
     if (formElement) {
-        console.log(`Formulaire trouvé :`, formElement);
         formElement.classList.remove('show');
-    } else {
-        console.error(`Formulaire non trouvé pour ${page}`);
     }
 }
 
@@ -151,12 +243,7 @@ function capitalizeFirstLetter(string) {
 // Charger les données de la page depuis l'API
 function loadData(page) {
     fetch(`http://127.0.0.1:8080/api/${page}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             displayData(page, data);
         })
@@ -187,53 +274,9 @@ function displayData(page, data) {
                 <td>${item.type_client}</td>
             `;
         }
+        // Ajouter plus de cas pour les autres pages comme "produits", "tvas", etc.
         tableBody.appendChild(row);
     });
 }
-
-// Gestion des formulaires
-document.addEventListener('DOMContentLoaded', () => {
-    // Gérer la soumission du formulaire pour chaque page
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêcher la soumission classique du formulaire
-
-            // Récupérer les données du formulaire
-            const formData = new FormData(form);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            const page = form.id.replace('Form', '');
-
-            // Envoyer la requête POST au serveur Flask
-            fetch(`http://127.0.0.1:8080/api/${page}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP : ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert(`${capitalizeFirstLetter(page)} ajouté avec succès !`);
-                loadData(page);  // Recharger les données de la page après ajout
-                hideForm(page);  // Masquer le formulaire
-            })
-            .catch(error => {
-                console.error(`Erreur lors de l'ajout de ${page}:`, error);
-            });
-        });
-    });
-
-    // Charger la page "clients" par défaut
-    loadPage('clients');
-});
 
 
