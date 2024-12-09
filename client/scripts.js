@@ -34,7 +34,7 @@ function loadPage(page) {
 function generateForm(page) {
     let formHtml = `<h2>${capitalizeFirstLetter(page)}</h2>`;
     formHtml += `<button class="btn btn-primary mb-3" onclick="showForm('${page}')">Ajouter un ${capitalizeFirstLetter(page)}</button>`;
-    formHtml += `<form id="${page}Form" class="form-container" style="display:none;">`;
+    formHtml += `<form id="${page}Form" class="form-container">`;
 
     // Formulaire pour "clients"
     if (page === 'clients') {
