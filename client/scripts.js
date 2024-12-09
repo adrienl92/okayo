@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gérer la soumission du formulaire pour chaque page
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêcher la soumission classique du formulaire
+            event.preventDefault(); // Empêcher la soumission classique du formulaire (c'est ici que le rechargement est empêché)
 
             // Récupérer les données du formulaire
             const formData = new FormData(form);
@@ -205,10 +205,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 data[key] = value;  // Crée un objet JSON avec les données
             });
 
-            // Affichage des données pour débogage
-            console.log('Données envoyées :', data);
+            // Afficher les données dans la console pour débogage
+            console.log("Données envoyées :", data);
 
-            const page = form.id.replace('Form', '');
+            const page = form.id.replace('Form', '');  // Récupère le nom de la page (clients, produits, etc.)
 
             // Envoyer la requête POST au serveur Flask
             fetch(`http://127.0.0.1:8080/api/${page}`, {
