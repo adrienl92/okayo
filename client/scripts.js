@@ -202,8 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const data = {};
             formData.forEach((value, key) => {
-                data[key] = value;
+                data[key] = value;  // Crée un objet JSON avec les données
             });
+
+            // Affichage des données pour débogage
+            console.log('Données envoyées :', data);
 
             const page = form.id.replace('Form', '');
 
@@ -213,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data)  // Envoyer les données sous forme de JSON
             })
             .then(response => {
                 if (!response.ok) {
@@ -235,5 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger la page "clients" par défaut
     loadPage('clients');
 });
+
 
 
