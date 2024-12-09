@@ -54,7 +54,7 @@ function generateForm(page) {
             </div>
             <div class="form-group">
                 <label for="code_postal">Code Postal</label>
-                <input type="text" class="form-control" id="code_postal" name="code">
+                <input type="text" class="form-control" id="code_postal" name="code_postal">
             </div>
             <div class="form-group">
                 <label for="pays">Pays</label>
@@ -70,15 +70,15 @@ function generateForm(page) {
             </div>
             <div class="form-group">
                 <label for="date_debut_client">Date Début Client</label>
-                <input type="date" class="form-control" id="date_debut_client" name="dd">
+                <input type="date" class="form-control" id="date_debut_client" name="date_debut_client">
             </div>
             <div class="form-group">
                 <label for="date_fin_client">Date Fin Client</label>
-                <input type="date" class="form-control" id="date_fin_client" name="df">
+                <input type="date" class="form-control" id="date_fin_client" name="date_fin_client">
             </div>
             <div class="form-group">
                 <label for="type_client">Type Client</label>
-                <input type="text" class="form-control" id="type_client" name="type">
+                <input type="text" class="form-control" id="type_client" name="type_client">
             </div>
             <button type="submit" class="btn btn-success">Sauvegarder</button>
             <button type="button" class="btn btn-secondary" onclick="hideForm('${page}')">Annuler</button>
