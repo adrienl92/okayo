@@ -122,12 +122,25 @@ function generateTable(page) {
 // Fonction pour afficher le formulaire
 function showForm(page) {
     console.log(`Affichage du formulaire pour ${page}`);
-    document.getElementById(`${page}Form`).classList.add('show');
+    const formElement = document.getElementById(`${page}Form`);
+    if (formElement) {
+        console.log(`Formulaire trouvé :`, formElement);
+        formElement.classList.add('show');
+    } else {
+        console.error(`Formulaire non trouvé pour ${page}`);
+    }
 }
 
 // Fonction pour cacher le formulaire
 function hideForm(page) {
-    document.getElementById(`${page}Form`).classList.remove('show');
+    console.log(`Masquage du formulaire pour ${page}`);
+    const formElement = document.getElementById(`${page}Form`);
+    if (formElement) {
+        console.log(`Formulaire trouvé :`, formElement);
+        formElement.classList.remove('show');
+    } else {
+        console.error(`Formulaire non trouvé pour ${page}`);
+    }
 }
 
 // Fonction pour capitaliser la première lettre d'un mot
@@ -138,7 +151,12 @@ function capitalizeFirstLetter(string) {
 // Charger les données de la page depuis l'API
 function loadData(page) {
     fetch(`http://127.0.0.1:8080/api/${page}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             displayData(page, data);
         })
@@ -197,7 +215,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 alert(`${capitalizeFirstLetter(page)} ajouté avec succès !`);
                 loadData(page);  // Recharger les données de la page après ajout
@@ -212,6 +235,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger la page "clients" par défaut
     loadPage('clients');
 });
-
 
 
