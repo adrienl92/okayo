@@ -3,28 +3,29 @@ from flask_cors import CORS  # Importer CORS pour gérer les requêtes cross-ori
 import sqlite3
 
 app = Flask(__name__)
-CORS(app)  # Activer CORS
+CORS(app)  # Activer CORS pour permettre les requêtes depuis le front-end
 
-DB_PATH = 'bddokayo.db'
+DB_PATH = 'bddokayo.db'  # Chemin de la base de données SQLite
 
+# Fonction pour se connecter à la base de données
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row  # Permet d'accéder aux colonnes par leur nom
     return conn
 
-# Routes pour les Clients
+# Route pour récupérer tous les clients
 @app.route('/api/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Clients')
+        cursor.execute('SELECT * FROM Clients')  # Récupère tous les clients
         clients = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify([dict(client) for client in clients])
+        return jsonify([dict(client) for client in clients])  # Retourne les clients en JSON
     elif request.method == 'POST':
-        data = request.get_json()
+        data = request.get_json()  # Récupère les données envoyées en JSON
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
@@ -37,8 +38,140 @@ def clients():
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Client ajouté', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Client ajouté', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
+
+# Route pour récupérer tous les produits
+@app.route('/api/produits', methods=['GET', 'POST'])
+def produits():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM Produits')  # Récupère tous les produits
+        produits = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([dict(produit) for produit in produits])  # Retourne les produits en JSON
+    elif request.method == 'POST':
+        data = request.get_json()  # Récupère les données envoyées en JSON
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Produits (nom_produit, categorie_produit, date_debut, date_fin)
+            VALUES (?, ?, ?, ?)
+        ''', (
+            data['nom_produit'], data['categorie_produit'], data['date_debut'], data['date_fin']
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'Produit ajouté', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
+
+# Route pour récupérer tous les taux de TVA
+@app.route('/api/tvas', methods=['GET', 'POST'])
+def tvas():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM TVA')  # Récupère tous les taux de TVA
+        tvas = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([dict(tva) for tva in tvas])  # Retourne les taux de TVA en JSON
+    elif request.method == 'POST':
+        data = request.get_json()  # Récupère les données envoyées en JSON
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO TVA (taux_tva, date_debut_tva, date_fin_tva, type_tva)
+            VALUES (?, ?, ?, ?)
+        ''', (
+            data['taux_tva'], data['date_debut_tva'], data['date_fin_tva'], data['type_tva']
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'TVA ajoutée', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
+
+# Route pour récupérer toutes les tarifications
+@app.route('/api/tarifications', methods=['GET', 'POST'])
+def tarifications():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM Tarification')  # Récupère toutes les tarifications
+        tarifications = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([dict(tarification) for tarification in tarifications])  # Retourne les tarifications en JSON
+    elif request.method == 'POST':
+        data = request.get_json()  # Récupère les données envoyées en JSON
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Tarification (id_produit, type_tarif, prix_ht, tva, date_debut, date_fin, remise)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            data['id_produit'], data['type_tarif'], data['prix_ht'], data['tva'], 
+            data['date_debut'], data['date_fin'], data['remise']
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'Tarification ajoutée', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
+
+# Route pour récupérer toutes les factures
+@app.route('/api/factures', methods=['GET', 'POST'])
+def factures():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM Factures')  # Récupère toutes les factures
+        factures = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([dict(facture) for facture in factures])  # Retourne les factures en JSON
+    elif request.method == 'POST':
+        data = request.get_json()  # Récupère les données envoyées en JSON
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Factures (date_facture, id_client, total_ht, total_tva, total_ttc)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            data['date_facture'], data['id_client'], data['total_ht'], 
+            data['total_tva'], data['total_ttc']
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'Facture ajoutée', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
+
+# Route pour récupérer toutes les lignes de facture
+@app.route('/api/lignes_facture', methods=['GET', 'POST'])
+def lignes_facture():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM LignesFacture')  # Récupère toutes les lignes de facture
+        lignes_facture = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([dict(ligne) for ligne in lignes_facture])  # Retourne les lignes de facture en JSON
+    elif request.method == 'POST':
+        data = request.get_json()  # Récupère les données envoyées en JSON
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO LignesFacture (id_facture, id_produit, designation, pu_ht, quantite, taux_tva, total_ht, total_tva, total_ttc)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            data['id_facture'], data['id_produit'], data['designation'], data['pu_ht'],
+            data['quantite'], data['taux_tva'], data['total_ht'], data['total_tva'], data['total_ttc']
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'Ligne de facture ajoutée', 'id': cursor.lastrowid}), 201  # Retourne un message de succès
 
 if __name__ == '__main__':
     app.run(debug=True)
-
