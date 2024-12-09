@@ -4,7 +4,7 @@ import sqlite3
 app = Flask(__name__)
 
 # Configuration de la base de données SQLite
-DB_PATH = 'gestion_facturation.db'
+DB_PATH = 'bddokayo.db'
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
