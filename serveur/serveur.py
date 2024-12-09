@@ -13,6 +13,29 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def init_db():
+    with get_db_connection() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS Clients (
+                id_client INTEGER PRIMARY KEY AUTOINCREMENT,
+                nom TEXT NOT NULL,
+                adresse TEXT,
+                ville TEXT,
+                code_postal TEXT,
+                pays TEXT,
+                email TEXT,
+                telephone TEXT,
+                date_debut_client DATE,
+                date_fin_client DATE,
+                type_client TEXT
+            )
+        ''')
+        conn.commit()
+
+@app.before_first_request
+def create_tables():
+    init_db()
+
 @app.route('/api/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'GET':
