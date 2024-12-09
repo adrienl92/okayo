@@ -19,7 +19,7 @@ def clients():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Clients')  # Récupère tous les clients
+        cursor.execute('SELECT * FROM clients')  # Table clients en minuscule
         clients = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -29,7 +29,7 @@ def clients():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO Clients (nom, adresse, ville, code_postal, pays, email, telephone, date_debut_client, date_fin_client, type_client)
+            INSERT INTO clients (nom, adresse, ville, code_postal, pays, email, telephone, date_debut_client, date_fin_client, type_client)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['nom'], data['adresse'], data['ville'], data['code_postal'], data['pays'], 
@@ -46,7 +46,7 @@ def produits():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Produits')  # Récupère tous les produits
+        cursor.execute('SELECT * FROM produits')  # Table produits en minuscule
         produits = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -56,7 +56,7 @@ def produits():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO Produits (nom_produit, categorie_produit, date_debut, date_fin)
+            INSERT INTO produits (nom_produit, categorie_produit, date_debut, date_fin)
             VALUES (?, ?, ?, ?)
         ''', (
             data['nom_produit'], data['categorie_produit'], data['date_debut'], data['date_fin']
@@ -72,7 +72,7 @@ def tvas():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM TVA')  # Récupère tous les taux de TVA
+        cursor.execute('SELECT * FROM tva')  # Table tva en minuscule
         tvas = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -82,7 +82,7 @@ def tvas():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO TVA (taux_tva, date_debut_tva, date_fin_tva, type_tva)
+            INSERT INTO tva (taux_tva, date_debut_tva, date_fin_tva, type_tva)
             VALUES (?, ?, ?, ?)
         ''', (
             data['taux_tva'], data['date_debut_tva'], data['date_fin_tva'], data['type_tva']
@@ -98,7 +98,7 @@ def tarifications():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Tarification')  # Récupère toutes les tarifications
+        cursor.execute('SELECT * FROM tarification')  # Table tarification en minuscule
         tarifications = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -108,7 +108,7 @@ def tarifications():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO Tarification (id_produit, type_tarif, prix_ht, tva, date_debut, date_fin, remise)
+            INSERT INTO tarification (id_produit, type_tarif, prix_ht, tva, date_debut, date_fin, remise)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['id_produit'], data['type_tarif'], data['prix_ht'], data['tva'], 
@@ -125,7 +125,7 @@ def factures():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Factures')  # Récupère toutes les factures
+        cursor.execute('SELECT * FROM factures')  # Table factures en minuscule
         factures = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -135,7 +135,7 @@ def factures():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO Factures (date_facture, id_client, total_ht, total_tva, total_ttc)
+            INSERT INTO factures (date_facture, id_client, total_ht, total_tva, total_ttc)
             VALUES (?, ?, ?, ?, ?)
         ''', (
             data['date_facture'], data['id_client'], data['total_ht'], 
@@ -152,7 +152,7 @@ def lignes_facture():
     if request.method == 'GET':
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM LignesFacture')  # Récupère toutes les lignes de facture
+        cursor.execute('SELECT * FROM lignesfacture')  # Table lignesfacture en minuscule
         lignes_facture = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -162,7 +162,7 @@ def lignes_facture():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO LignesFacture (id_facture, id_produit, designation, pu_ht, quantite, taux_tva, total_ht, total_tva, total_ttc)
+            INSERT INTO lignesfacture (id_facture, id_produit, designation, pu_ht, quantite, taux_tva, total_ht, total_tva, total_ttc)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['id_facture'], data['id_produit'], data['designation'], data['pu_ht'],
@@ -175,3 +175,4 @@ def lignes_facture():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
