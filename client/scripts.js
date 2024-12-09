@@ -121,6 +121,7 @@ function generateTable(page) {
 
 // Fonction pour afficher le formulaire
 function showForm(page) {
+    console.log(`Affichage du formulaire pour ${page}`);
     document.getElementById(`${page}Form`).classList.add('show');
 }
 
