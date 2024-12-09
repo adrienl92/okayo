@@ -84,8 +84,6 @@ function generateForm(page) {
         `;
     }
 
-    // Vous pouvez ajouter d'autres pages comme 'produits', 'tvas', etc.
-
     formHtml += '</form>';
     return formHtml;
 }
@@ -176,9 +174,12 @@ function displayData(page, data) {
 
 // Gestion des formulaires
 document.addEventListener('DOMContentLoaded', () => {
+    // Gérer la soumission du formulaire pour chaque page
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault();
+            event.preventDefault(); // Empêcher la soumission classique du formulaire
+
+            // Récupérer les données du formulaire
             const formData = new FormData(form);
             const data = {};
             formData.forEach((value, key) => {
@@ -187,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const page = form.id.replace('Form', '');
 
+            // Envoyer la requête POST au serveur Flask
             fetch(`http://127.0.0.1:8080/api/${page}`, {
                 method: 'POST',
                 headers: {
@@ -197,8 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 alert(`${capitalizeFirstLetter(page)} ajouté avec succès !`);
-                loadData(page);
-                hideForm(page);
+                loadData(page);  // Recharger les données de la page après ajout
+                hideForm(page);  // Masquer le formulaire
             })
             .catch(error => {
                 console.error(`Erreur lors de l'ajout de ${page}:`, error);
@@ -209,5 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger la page "clients" par défaut
     loadPage('clients');
 });
+
 
 
