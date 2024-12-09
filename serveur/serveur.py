@@ -1,37 +1,33 @@
 from flask import Flask, request, jsonify
-import mysql.connector
+import sqlite3
 
 app = Flask(__name__)
 
-# Configuration de la base de données
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'gestion_facturation'
-}
+# Configuration de la base de données SQLite
+DB_PATH = 'gestion_facturation.db'
 
 def get_db_connection():
-    conn = mysql.connector.connect(**db_config)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
     return conn
 
 @app.route('/api/clients', methods=['GET', 'POST'])
 def clients():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM Clients')
         clients = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(clients)
+        return jsonify([dict(client) for client in clients])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO Clients (nom, adresse, ville, code_postal, pays, email, telephone, date_debut_client, date_fin_client, type_client)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['nom'],
             data['adresse'],
@@ -53,19 +49,19 @@ def clients():
 def produits():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM Produits')
         produits = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(produits)
+        return jsonify([dict(produit) for produit in produits])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO Produits (nom_produit, categorie_produit, date_debut, date_fin)
-            VALUES (%s, %s, %s, %s)
+            VALUES (?, ?, ?, ?)
         ''', (
             data['nom_produit'],
             data['categorie_produit'],
@@ -81,19 +77,19 @@ def produits():
 def tvas():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM TVA')
         tvas = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(tvas)
+        return jsonify([dict(tva) for tva in tvas])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO TVA (taux_tva, date_debut_tva, date_fin_tva, type_tva)
-            VALUES (%s, %s, %s, %s)
+            VALUES (?, ?, ?, ?)
         ''', (
             data['taux_tva'],
             data['date_debut_tva'],
@@ -109,19 +105,19 @@ def tvas():
 def tarifications():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM Tarification')
         tarifications = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(tarifications)
+        return jsonify([dict(tarification) for tarification in tarifications])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO Tarification (id_produit, type_tarif, prix_ht, tva, date_debut, date_fin, remise)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['id_produit'],
             data['type_tarif'],
@@ -140,19 +136,19 @@ def tarifications():
 def factures():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM Factures')
         factures = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(factures)
+        return jsonify([dict(facture) for facture in factures])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO Factures (date_facture, id_client, total_ht, total_tva, total_ttc)
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES (?, ?, ?, ?, ?)
         ''', (
             data['date_facture'],
             data['id_client'],
@@ -169,19 +165,19 @@ def factures():
 def lignes_facture():
     if request.method == 'GET':
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM LignesFacture')
         lignes_facture = cursor.fetchall()
         cursor.close()
         conn.close()
-        return jsonify(lignes_facture)
+        return jsonify([dict(ligne) for ligne in lignes_facture])
     elif request.method == 'POST':
         data = request.get_json()
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO LignesFacture (id_facture, id_produit, designation, pu_ht, quantite, taux_tva, total_ht, total_tva, total_ttc)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             data['id_facture'],
             data['id_produit'],
