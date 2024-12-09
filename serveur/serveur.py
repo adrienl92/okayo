@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import sqlite3
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Autorise toutes les origines
 
 # Configuration de la base de données SQLite
 DB_PATH = 'bddokayo.db'
@@ -41,9 +43,10 @@ def clients():
             data['type_client']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Client ajouté', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Client ajouté', 'id': last_id}), 201
 
 @app.route('/api/produits', methods=['GET', 'POST'])
 def produits():
@@ -69,9 +72,10 @@ def produits():
             data['date_fin']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Produit ajouté', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Produit ajouté', 'id': last_id}), 201
 
 @app.route('/api/tvas', methods=['GET', 'POST'])
 def tvas():
@@ -97,9 +101,10 @@ def tvas():
             data['type_tva']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'TVA ajoutée', 'id': cursor.lastrowid})
+        return jsonify({'message': 'TVA ajoutée', 'id': last_id}), 201
 
 @app.route('/api/tarifications', methods=['GET', 'POST'])
 def tarifications():
@@ -128,9 +133,10 @@ def tarifications():
             data['remise']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Tarification ajoutée', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Tarification ajoutée', 'id': last_id}), 201
 
 @app.route('/api/factures', methods=['GET', 'POST'])
 def factures():
@@ -157,9 +163,10 @@ def factures():
             data['total_ttc']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Facture ajoutée', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Facture ajoutée', 'id': last_id}), 201
 
 @app.route('/api/lignes_facture', methods=['GET', 'POST'])
 def lignes_facture():
@@ -190,9 +197,10 @@ def lignes_facture():
             data['total_ttc']
         ))
         conn.commit()
+        last_id = cursor.lastrowid
         cursor.close()
         conn.close()
-        return jsonify({'message': 'Ligne de facture ajoutée', 'id': cursor.lastrowid})
+        return jsonify({'message': 'Ligne de facture ajoutée', 'id': last_id}), 201
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
