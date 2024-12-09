@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const page = form.id.replace('Form', '');  // Récupère le nom de la page (clients, produits, etc.)
 
             // Envoyer la requête POST au serveur Flask
-            fetch(`http://127.0.0.1:8080/api/${page}`, {
+            fetch(`localhost:8080/api/${page}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
