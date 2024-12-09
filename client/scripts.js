@@ -167,5 +167,47 @@ function displayData(page, data) {
                 <td>${item.telephone}</td>
                 <td>${item.date_debut_client}</td>
                 <td>${item.date_fin_client}</td>
-                <td>${item.type
+                <td>${item.type_client}</td>
+            `;
+        }
+        tableBody.appendChild(row);
+    });
+}
+
+// Gestion des formulaires
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            const page = form.id.replace('Form', '');
+
+            fetch(`http://127.0.0.1:8080/api/${page}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`${capitalizeFirstLetter(page)} ajouté avec succès !`);
+                loadData(page);
+                hideForm(page);
+            })
+            .catch(error => {
+                console.error(`Erreur lors de l'ajout de ${page}:`, error);
+            });
+        });
+    });
+
+    // Charger la page "clients" par défaut
+    loadPage('clients');
+});
+
 
