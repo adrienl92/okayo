@@ -1,0 +1,6 @@
+# Ignore les fichiers temporaires et les dépendances
+*.pyc
+__pycache__/
+venv/
+*.log
+*.sqlite3
