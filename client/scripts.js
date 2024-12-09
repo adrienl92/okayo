@@ -28,6 +28,7 @@ function loadPage(page) {
     }
 
     loadData(page);
+    attachFormSubmitListeners(); // Attacher les gestionnaires d'événements après la génération du formulaire
 }
 
 // Fonction pour générer un formulaire pour une page donnée
@@ -191,12 +192,13 @@ function displayData(page, data) {
     });
 }
 
-// Gestion des formulaires
-document.addEventListener('DOMContentLoaded', () => {
-    // Gérer la soumission du formulaire pour chaque page
+// Fonction pour attacher les gestionnaires d'événements de soumission de formulaire
+function attachFormSubmitListeners() {
+    console.log("Attaching form submit listeners");
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêcher la soumission classique du formulaire (c'est ici que le rechargement est empêché)
+            event.preventDefault(); // Empêcher la soumission classique du formulaire
+            console.log("Form submit event intercepted");
 
             // Récupérer les données du formulaire
             const formData = new FormData(form);
@@ -234,10 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+}
 
-    // Charger la page "clients" par défaut
-    loadPage('clients');
-});
+// Charger la page "clients" par défaut
+loadPage('clients');
 
 
 
