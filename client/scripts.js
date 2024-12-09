@@ -32,13 +32,13 @@ function loadPage(page) {
 
 // Fonction pour générer un formulaire pour une page donnée
 function generateForm(page) {
-    let formHtml = <h2>${capitalizeFirstLetter(page)}</h2>;
-    formHtml += <button class="btn btn-primary mb-3" onclick="showForm('${page}')">Ajouter un ${capitalizeFirstLetter(page)}</button>;
-    formHtml += <form id="${page}Form" class="form-container">;
+    let formHtml = `<h2>${capitalizeFirstLetter(page)}</h2>`;
+    formHtml += `<button class="btn btn-primary mb-3" onclick="showForm('${page}')">Ajouter un ${capitalizeFirstLetter(page)}</button>`;
+    formHtml += `<form id="${page}Form" class="form-container">`;
 
     // Formulaire pour "clients"
     if (page === 'clients') {
-        formHtml += 
+        formHtml += `
             <div class="form-group">
                 <label for="nom">Nom</label>
                 <input type="text" class="form-control" id="nom" required>
@@ -81,7 +81,7 @@ function generateForm(page) {
             </div>
             <button type="submit" class="btn btn-success">Sauvegarder</button>
             <button type="button" class="btn btn-secondary" onclick="hideForm('${page}')">Annuler</button>
-        ;
+        `;
     }
 
     formHtml += '</form>';
@@ -90,12 +90,12 @@ function generateForm(page) {
 
 // Fonction pour générer une table pour afficher les données
 function generateTable(page) {
-    let tableHtml = <table class="table table-striped" id="${page}Table">
+    let tableHtml = `<table class="table table-striped" id="${page}Table">
         <thead>
             <tr>
-    ;
+    `;
     if (page === 'clients') {
-        tableHtml += 
+        tableHtml += `
             <th>ID</th>
             <th>Nom</th>
             <th>Adresse</th>
@@ -107,39 +107,39 @@ function generateTable(page) {
             <th>Date Début Client</th>
             <th>Date Fin Client</th>
             <th>Type Client</th>
-        ;
+        `;
     }
-    tableHtml += 
+    tableHtml += `
             </tr>
         </thead>
         <tbody>
             <!-- Données seront chargées ici -->
         </tbody>
-    </table>;
+    </table>`;
     return tableHtml;
 }
 
 // Fonction pour afficher le formulaire
 function showForm(page) {
-    console.log(Affichage du formulaire pour ${page});
-    const formElement = document.getElementById(${page}Form);
+    console.log(`Affichage du formulaire pour ${page}`);
+    const formElement = document.getElementById(`${page}Form`);
     if (formElement) {
-        console.log(Formulaire trouvé :, formElement);
+        console.log(`Formulaire trouvé :`, formElement);
         formElement.classList.add('show');
     } else {
-        console.error(Formulaire non trouvé pour ${page});
+        console.error(`Formulaire non trouvé pour ${page}`);
     }
 }
 
 // Fonction pour cacher le formulaire
 function hideForm(page) {
-    console.log(Masquage du formulaire pour ${page});
-    const formElement = document.getElementById(${page}Form);
+    console.log(`Masquage du formulaire pour ${page}`);
+    const formElement = document.getElementById(`${page}Form`);
     if (formElement) {
-        console.log(Formulaire trouvé :, formElement);
+        console.log(`Formulaire trouvé :`, formElement);
         formElement.classList.remove('show');
     } else {
-        console.error(Formulaire non trouvé pour ${page});
+        console.error(`Formulaire non trouvé pour ${page}`);
     }
 }
 
@@ -150,10 +150,10 @@ function capitalizeFirstLetter(string) {
 
 // Charger les données de la page depuis l'API
 function loadData(page) {
-    fetch(http://127.0.0.1:8080/api/${page})
+    fetch(`http://127.0.0.1:8080/api/${page}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(Erreur HTTP : ${response.status});
+                throw new Error(`Erreur HTTP : ${response.status}`);
             }
             return response.json();
         })
@@ -161,19 +161,19 @@ function loadData(page) {
             displayData(page, data);
         })
         .catch(error => {
-            console.error(Erreur lors du chargement des ${page}:, error);
+            console.error(`Erreur lors du chargement des ${page}:`, error);
         });
 }
 
 // Afficher les données dans la table
 function displayData(page, data) {
-    const tableBody = document.getElementById(${page}Table).getElementsByTagName('tbody')[0];
+    const tableBody = document.getElementById(`${page}Table`).getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
 
     data.forEach(item => {
         const row = document.createElement('tr');
         if (page === 'clients') {
-            row.innerHTML = 
+            row.innerHTML = `
                 <td>${item.id_client}</td>
                 <td>${item.nom}</td>
                 <td>${item.adresse}</td>
@@ -185,7 +185,7 @@ function displayData(page, data) {
                 <td>${item.date_debut_client}</td>
                 <td>${item.date_fin_client}</td>
                 <td>${item.type_client}</td>
-            ;
+            `;
         }
         tableBody.appendChild(row);
     });
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const page = form.id.replace('Form', '');
 
             // Envoyer la requête POST au serveur Flask
-            fetch(http://127.0.0.1:8080/api/${page}, {
+            fetch(`http://127.0.0.1:8080/api/${page}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -217,17 +217,17 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(Erreur HTTP : ${response.status});
+                    throw new Error(`Erreur HTTP : ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                alert(${capitalizeFirstLetter(page)} ajouté avec succès !);
+                alert(`${capitalizeFirstLetter(page)} ajouté avec succès !`);
                 loadData(page);  // Recharger les données de la page après ajout
                 hideForm(page);  // Masquer le formulaire
             })
             .catch(error => {
-                console.error(Erreur lors de l'ajout de ${page}:, error);
+                console.error(`Erreur lors de l'ajout de ${page}:`, error);
             });
         });
     });
@@ -235,4 +235,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger la page "clients" par défaut
     loadPage('clients');
 });
+
 
